@@ -1,0 +1,36 @@
+
+:global(#root) {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem;
+  /* text-align: center; */
+}
+
+.container {
+  min-width: 21rem;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-left: 0;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.nav-link {
+  text-decoration: none;
+  /* font-size: 1rem; */
+  padding-bottom: .1rem;
+  text-transform: uppercase;
+}
+
+.nav-item.active .nav-link {
+  border-bottom: 1px solid #646cff;
+}
+
+.tab-content {
+  display: block;
+}
