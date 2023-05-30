@@ -4,7 +4,7 @@ import { useSettingsStore } from "../utils/useSettingsStore";
 import { StatusMessage } from "../utils/StatusMessage";
 
 export default function Options() {
-  const { loading, settings, setSettings: setSettings } = useSettingsStore();
+  const { loading, settings, setSettings } = useSettingsStore();
   const [openAIApiKeyInputText, setOpenAIApiKeyInputText] = useState("");
   const [message, setMessage] = useExpiringState<StatusMessage | undefined>(
     undefined,

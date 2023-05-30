@@ -19,7 +19,7 @@ export const SettingsStoreContext = createContext<SettingsStore>({
   loading: false,
   settings: {
     openAIApiKey: undefined,
-    chatMode: "with-page",
+    chatMode: "with-llm",
   },
   setSettings: () => {
     throw new Error("setOpenAIApiKey not implemented");

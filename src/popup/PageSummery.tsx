@@ -5,11 +5,11 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { useEffect, useMemo, useState } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { useStoredState } from "../utils/useStoredState";
-import { Loader } from "./loader/Loader";
-import { Select, SelectProps } from "./select/Select";
 import { StorageKeys } from "../utils/constants";
 import { useSettingsStore } from "../utils/useSettingsStore";
 import { getCurrentPageContent } from "../utils/getPageContent";
+import { Loader } from "../common/loader/Loader";
+import { SelectProps, Select } from "../common/select/Select";
 
 type SummeryType = {
   type: "concise" | "detailed" | "table-of-content";
@@ -51,15 +51,6 @@ DETAILED SUMMERY:`,
 
 TABLE OF CONTENT:`,
   },
-  //   {
-  //     type: "topics",
-  //     label: "Topics",
-  //     template: `What are the topics discussed in following:
-
-  // "{text}"
-
-  // Topics:`,
-  //   },
 ];
 
 type StoredSummery = {
@@ -80,6 +71,8 @@ export default function PageSummery() {
   const [loading, summery, setSummery] = useStoredState<StoredSummery>({
     storageKey: StorageKeys.PAGE_SUMMERY,
     defaultValue: INITIAL_SUMMERY,
+    storageArea: "session",
+    scope: "page",
   });
 
   const summeryTypeOptions = useMemo<SelectProps["options"]>(

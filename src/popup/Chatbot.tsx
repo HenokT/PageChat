@@ -25,13 +25,13 @@ import {
   HumanMessagePromptTemplate,
 } from "langchain/prompts";
 import { useSettingsStore } from "../utils/useSettingsStore";
-import { Select } from "./select/Select";
+import { Select } from "../common/select/Select";
 import { getCurrentPageContent } from "../utils/getPageContent";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { VectorStore } from "langchain/vectorstores/base";
-import { ChatMode } from "./SettingsProvider";
+import { ChatMode } from "../common/SettingsStoreProvider";
 
 function ChatMessageRow({ message }: { message: BaseChatMessage }) {
   return (
@@ -52,18 +52,18 @@ function ChatMessageRow({ message }: { message: BaseChatMessage }) {
 
 const ChatModeOptions = [
   {
-    label: "Chat with the current page",
+    label: "Chat with page",
     value: "with-page",
   },
   {
-    label: "Chat with GPT-3.5",
+    label: "Chat with GPT",
     value: "with-llm",
   },
 ];
 
 export function Chatbot() {
   const { settings, setSettings } = useSettingsStore();
-  const { openAIApiKey, chatMode = "with-page" } = settings;
+  const { openAIApiKey, chatMode = "with-llm" } = settings;
   const formRef = useRef<HTMLFormElement | null>(null);
   const outputPanelRef = useRef<HTMLDivElement | null>(null);
   const [, history, setHistory] = useChatHistory([], chatMode);
@@ -86,25 +86,30 @@ export function Chatbot() {
     let ignore = false;
 
     async function loadPageIntoVectorStore() {
-      const pageContent = await getCurrentPageContent();
-      if (!pageContent?.pageContent) return;
+      try {
+        const pageContent = await getCurrentPageContent();
+        if (!pageContent?.pageContent) return;
 
-      const textSplitter = new RecursiveCharacterTextSplitter({
-        chunkSize: 4000,
-      });
+        const textSplitter = new RecursiveCharacterTextSplitter({
+          chunkSize: 4000,
+        });
 
-      const docs = await textSplitter.createDocuments([
-        pageContent.pageContent,
-      ]);
+        const docs = await textSplitter.createDocuments([
+          pageContent.pageContent,
+        ]);
 
-      const vectorStore = await MemoryVectorStore.fromDocuments(
-        docs,
-        new OpenAIEmbeddings({ openAIApiKey })
-      );
+        const vectorStore = await MemoryVectorStore.fromDocuments(
+          docs,
+          new OpenAIEmbeddings({ openAIApiKey })
+        );
 
-      if (ignore) return;
+        if (ignore) return;
 
-      setPageContentVectorStore(vectorStore);
+        setPageContentVectorStore(vectorStore);
+      } catch (error) {
+        console.error(error);
+        setError(`Error: ${error}`);
+      }
     }
 
     if (chatMode === "with-page") {
@@ -134,7 +139,9 @@ export function Chatbot() {
       ],
     });
 
-    if (chatMode === "with-page" && pageContentVectorStore) {
+    if (chatMode === "with-page") {
+      if (!pageContentVectorStore) return undefined;
+
       return ConversationalRetrievalQAChain.fromLLM(
         llm,
         pageContentVectorStore.asRetriever(),

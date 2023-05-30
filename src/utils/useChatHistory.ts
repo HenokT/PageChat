@@ -8,7 +8,7 @@ import {
 } from "langchain/schema";
 import { Dispatch, SetStateAction, useCallback, useMemo } from "react";
 import { StorageKeys } from "./constants";
-import { ChatMode } from "../components/SettingsProvider";
+import { ChatMode } from "../common/SettingsStoreProvider";
 import { useStoredState } from "./useStoredState";
 
 function deserializeMessage(message: StoredMessage): BaseChatMessage {

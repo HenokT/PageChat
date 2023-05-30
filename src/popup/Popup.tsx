@@ -1,12 +1,12 @@
 import classNames from "classnames";
 import { useState } from "react";
-import styles from "./App.module.css";
-import Chatbot from "./components/Chatbot";
-import Options from "./components/Options";
-import PageSummery from "./components/PageSummery";
-import { useSettingsStore } from "./utils/useSettingsStore";
+import styles from "./Popup.module.css";
+import Chatbot from "./Chatbot";
+import Options from "../options/Options";
+import { useSettingsStore } from "../utils/useSettingsStore";
+import PageSummery from "./PageSummery";
 
-function App() {
+function Popup() {
   const { loading, settings } = useSettingsStore();
 
   const [activeTab, setActiveTab] = useState(0);
@@ -59,4 +59,4 @@ function App() {
   );
 }
 
-export default App;
+export default Popup;

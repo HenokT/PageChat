@@ -3,12 +3,12 @@
     "name": "PageChat",
     "version": "1.0.0",
     "action": {
-        "default_popup": "index.html"
+        "default_popup": "popup.html"
     },
     "content_scripts": [
         {
             "js": [
-                "src/content.tsx"
+                "src/content-script.tsx"
             ],
             "matches": [
                 "https://*/*",
@@ -17,7 +17,7 @@
         }
     ],
     "background": {
-        "service_worker": "src/background.ts",
+        "service_worker": "src/service-worker.ts",
         "type": "module"
     },
     "permissions": [

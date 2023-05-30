@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { SettingsStoreContext } from "../components/SettingsProvider";
+import { SettingsStoreContext } from "../common/SettingsStoreProvider";
 
 export function useSettingsStore() {
   return useContext(SettingsStoreContext);

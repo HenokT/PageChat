@@ -1,4 +1,7 @@
-import { GetPageContentRequest, GetPageContentResponse } from "../content";
+import {
+  GetPageContentRequest,
+  GetPageContentResponse,
+} from "../content-script";
 
 export async function getCurrentPageContent() {
   const [tab] = await chrome.tabs.query({
@@ -8,10 +11,15 @@ export async function getCurrentPageContent() {
 
   if (!tab.id) return;
 
-  return await chrome.tabs.sendMessage<
-    GetPageContentRequest,
-    GetPageContentResponse
-  >(tab.id, {
-    action: "getPageContent",
-  });
+  try {
+    return await chrome.tabs.sendMessage<
+      GetPageContentRequest,
+      GetPageContentResponse
+    >(tab.id, {
+      action: "getPageContent",
+    });
+  } catch (error) {
+    console.error(error);
+    throw new Error("Unable to get page content");
+  }
 }
