@@ -1,5 +1,5 @@
 export const StorageKeys = {
   SETTINGS: "settings",
-  PAGE_SUMMERY: "page-summery",
+  PAGE_SUMMARY: "page-summary",
   CHAT_HISTORY: "history",
 } as const;

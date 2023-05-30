@@ -11,17 +11,17 @@ import { getCurrentPageContent } from "../utils/getPageContent";
 import { Loader } from "../common/loader/Loader";
 import { SelectProps, Select } from "../common/select/Select";
 
-type SummeryType = {
+type SummaryType = {
   type: "concise" | "detailed" | "table-of-content";
   label: string;
   template: string; //| ((input: Record<string, string>) => string);
 };
 
-const SUPPORTED_SUMMERY_TYPES: SummeryType[] = [
+const SUPPORTED_SUMMARY_TYPES: SummaryType[] = [
   {
     type: "concise",
     label: "Concise",
-    template: `Write a concise summery of the following in markdown format:
+    template: `Write a concise summary of the following in markdown format:
 
 
 "{text}"
@@ -32,13 +32,13 @@ CONCISE SUMMARY:`,
   {
     type: "detailed",
     label: "Detailed",
-    template: `Write a detailed summery of the following in markdown format:
+    template: `Write a detailed summary of the following in markdown format:
 
 
 "{text}"
 
 
-DETAILED SUMMERY:`,
+DETAILED SUMMARY:`,
   },
   {
     type: "table-of-content",
@@ -53,31 +53,31 @@ TABLE OF CONTENT:`,
   },
 ];
 
-type StoredSummery = {
-  type: SummeryType["type"];
+type StoredSummary = {
+  type: SummaryType["type"];
   content: string;
 };
 
-const INITIAL_SUMMERY = {
-  type: SUPPORTED_SUMMERY_TYPES[0].type,
+const INITIAL_SUMMARY = {
+  type: SUPPORTED_SUMMARY_TYPES[0].type,
   content: "",
 };
 
-export default function PageSummery() {
+export default function PageSummary() {
   const {
     settings: { openAIApiKey },
   } = useSettingsStore();
   const [generating, setGenerating] = useState(false);
-  const [loading, summery, setSummery] = useStoredState<StoredSummery>({
-    storageKey: StorageKeys.PAGE_SUMMERY,
-    defaultValue: INITIAL_SUMMERY,
+  const [loading, summary, setSummary] = useStoredState<StoredSummary>({
+    storageKey: StorageKeys.PAGE_SUMMARY,
+    defaultValue: INITIAL_SUMMARY,
     storageArea: "session",
     scope: "page",
   });
 
-  const summeryTypeOptions = useMemo<SelectProps["options"]>(
+  const summaryTypeOptions = useMemo<SelectProps["options"]>(
     () =>
-      SUPPORTED_SUMMERY_TYPES.map((type) => ({
+      SUPPORTED_SUMMARY_TYPES.map((type) => ({
         label: type.label,
         value: type.type,
       })),
@@ -88,7 +88,7 @@ export default function PageSummery() {
     let ignore = false;
 
     async function summarizeCurrentPage() {
-      if (loading || summery.content) return;
+      if (loading || summary.content) return;
 
       setGenerating(true);
       try {
@@ -109,8 +109,8 @@ export default function PageSummery() {
           pageContent.pageContent,
         ]);
 
-        const template = SUPPORTED_SUMMERY_TYPES.find(
-          (type) => type.type === summery.type
+        const template = SUPPORTED_SUMMARY_TYPES.find(
+          (type) => type.type === summary.type
         )?.template;
 
         if (!template) return;
@@ -134,8 +134,8 @@ export default function PageSummery() {
 
         console.log({ response });
 
-        setSummery({
-          ...summery,
+        setSummary({
+          ...summary,
           content: response.text,
         });
       } catch (error) {
@@ -149,7 +149,7 @@ export default function PageSummery() {
     return () => {
       ignore = true;
     };
-  }, [loading, openAIApiKey, setSummery, summery]);
+  }, [loading, openAIApiKey, setSummary, summary]);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
@@ -164,7 +164,7 @@ export default function PageSummery() {
         </div>
       )}
       <div>
-        <ReactMarkdown children={summery.content} />
+        <ReactMarkdown children={summary.content} />
       </div>
       <div
         style={{
@@ -174,11 +174,11 @@ export default function PageSummery() {
         }}
       >
         <Select
-          options={summeryTypeOptions}
-          value={summery.type}
+          options={summaryTypeOptions}
+          value={summary.type}
           onChange={(e) => {
-            setSummery({
-              type: e.target.value as SummeryType["type"],
+            setSummary({
+              type: e.target.value as SummaryType["type"],
               content: "",
             });
           }}
@@ -186,14 +186,14 @@ export default function PageSummery() {
         />
         <button
           onClick={() => {
-            setSummery({
-              ...summery,
+            setSummary({
+              ...summary,
               content: "",
             });
           }}
           disabled={loading || generating}
         >
-          Regenerate Summery
+          Regenerate Summary
         </button>
       </div>
     </div>

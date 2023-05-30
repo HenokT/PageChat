@@ -4,7 +4,7 @@ import styles from "./Popup.module.css";
 import Chatbot from "./Chatbot";
 import Options from "../options/Options";
 import { useSettingsStore } from "../utils/useSettingsStore";
-import PageSummery from "./PageSummery";
+import PageSummary from "./PageSummary";
 
 function Popup() {
   const { loading, settings } = useSettingsStore();
@@ -48,7 +48,7 @@ function Popup() {
         </ul>
         <div className={styles.tabContent}>
           {activeTab === 0 && <Chatbot />}
-          {activeTab === 1 && <PageSummery />}
+          {activeTab === 1 && <PageSummary />}
         </div>
       </main>
       <footer style={{ marginTop: "1rem", fontStyle: "italic", opacity: 0.75 }}>
