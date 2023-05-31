@@ -66,6 +66,7 @@ export function Chatbot() {
   const { openAIApiKey, chatMode = "with-llm" } = settings;
   const formRef = useRef<HTMLFormElement | null>(null);
   const outputPanelRef = useRef<HTMLDivElement | null>(null);
+  const userInputRef = useRef<HTMLTextAreaElement | null>(null);
   const [, history, setHistory] = useChatHistory([], chatMode);
   const [userInput, setUserInput] = useState("");
   const [userInputAwaitingResponse, setUserInputAwaitingResponse] = useState<
@@ -264,6 +265,13 @@ export function Chatbot() {
     setHistory([]);
   }, [setHistory]);
 
+  useEffect(() => {
+    if (!userInputRef.current) return;
+    const textArea = userInputRef.current;
+    textArea.style.height = "auto";
+    textArea.style.height = `${textArea.scrollHeight}px`;
+  }, [userInput]);
+
   return (
     <>
       <div
@@ -355,6 +363,7 @@ export function Chatbot() {
 
         <form ref={formRef} onSubmit={sendUserMessage}>
           <textarea
+            ref={userInputRef}
             id="message"
             placeholder="Send a message"
             style={{
@@ -364,7 +373,11 @@ export function Chatbot() {
               resize: "vertical",
             }}
             value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
+            onChange={(e) => {
+              setUserInput(e.target.value);
+              // e.target.style.height = "auto";
+              // e.target.style.height = `${e.target.scrollHeight}px`;
+            }}
             disabled={generating}
             onKeyDown={(event) => {
               if (event.key === "Enter" && !event.shiftKey) {
