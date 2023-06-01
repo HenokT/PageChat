@@ -201,7 +201,7 @@ export function Chatbot() {
         setUserInput("");
 
         if (chain instanceof ConversationChain) {
-          const response = await chain.call({
+          await chain.call({
             input: userInput,
             signal: abortControllerRef.current?.signal,
           });
