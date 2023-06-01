@@ -127,7 +127,7 @@ export function Chatbot() {
       openAIApiKey: openAIApiKey,
       // temperature: 0,
       streaming: true,
-      verbose: true,
+      // verbose: true,
       callbacks: [
         {
           handleLLMNewToken(token: string) {
@@ -147,7 +147,7 @@ export function Chatbot() {
         llm,
         pageContentVectorStore.asRetriever(),
         {
-          verbose: true,
+          // verbose: true,
           returnSourceDocuments: true,
         }
       );
@@ -161,7 +161,6 @@ export function Chatbot() {
          */
         inputKey: "input",
         memoryKey: "history",
-        // chatHistory: new ChatMessageHistory(history),
         chatHistory: {
           async getMessages() {
             return history;
@@ -198,19 +197,6 @@ export function Chatbot() {
       try {
         abortControllerRef.current = new AbortController();
 
-        // const message = new HumanChatMessage(messageText);
-        // setHistory((history) => [...history, message]);
-        // setMessageText("");
-        // const response = await llm.call(
-        //   [
-        //     // new SystemChatMessage("Answer the following question:"),
-        //     ...history,
-        //     message,
-        //   ],
-        //   { signal: controller.signal }
-        // );
-        // setHistory((history) => [...history, response]);
-
         setUserInputAwaitingResponse(userInput);
         setUserInput("");
 
@@ -220,11 +206,11 @@ export function Chatbot() {
             signal: abortControllerRef.current?.signal,
           });
 
-          console.log({
-            response,
-            // history,
-            outputKey: chain.outputKey,
-          });
+          // console.log({
+          //   response,
+          //   // history,
+          //   outputKey: chain.outputKey,
+          // });
         } else if (chain instanceof ConversationalRetrievalQAChain) {
           const response = await chain.call({
             question: userInput,
@@ -237,11 +223,6 @@ export function Chatbot() {
             new HumanChatMessage(userInput),
             new AIChatMessage(response.text),
           ]);
-
-          console.log({
-            response,
-            // history,
-          });
         }
       } catch (error) {
         console.error(error);
@@ -375,13 +356,11 @@ export function Chatbot() {
             value={userInput}
             onChange={(e) => {
               setUserInput(e.target.value);
-              // e.target.style.height = "auto";
-              // e.target.style.height = `${e.target.scrollHeight}px`;
             }}
             disabled={generating}
             onKeyDown={(event) => {
               if (event.key === "Enter" && !event.shiftKey) {
-                // Don't generate a new line
+                // Don't insert a new line
                 event.preventDefault();
 
                 // Submit the form

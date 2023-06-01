@@ -132,7 +132,7 @@ export default function PageSummary() {
 
         if (ignore) return;
 
-        console.log({ response });
+        // console.log({ response });
 
         setSummary({
           ...summary,
