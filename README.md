@@ -1,11 +1,11 @@
 # PageChat
 
-A Chrome extension that allows you to access Chat GPT from any webpage as well as ask questions about the page you are on. 
+A Chrome extension that allows you to access ChatGPT from any webpage as well as ask questions about the page you are on or summarize it. 
 
-The extension is built using [React](https://react.dev/) with [Vite](https://vitejs.dev/) used as the bundler. It's also using the Vite plugin [
-CRXJS](https://crxjs.dev/vite-plugin/) that enables things like *Hot Module Replacement(HMR)* and *static asset imports* for a smooth developer experience.
+The extension is built with [React](https://react.dev/) and [Vite](https://vitejs.dev/). It also uses the Vite plugin [
+CRXJS](https://crxjs.dev/vite-plugin/) which parses the extension's entry file [manifest.json](manifest.json) and ensures that files referenced in it are compiled and bundled. 
 
-## Development
+## Develop
 
 You can run the extension in development mode using the following commands:
 
@@ -17,6 +17,8 @@ npm run dev
 Then, go to `chrome://extensions/` and enable `Developer mode` in the top right corner. Then click `Load unpacked` and select the `dist` folder in the project directory. The extension should now be installed and ready to use.
 
 Changes to the code will be automatically reflected in the extension without having to reload the extension.
+
+## Build
 
 To build the extension in production mode, run the following command:
 
