@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "classnames": "^2.3.2",
-    "langchain": "^0.0.78",
+    "langchain": "^0.0.88",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.7"

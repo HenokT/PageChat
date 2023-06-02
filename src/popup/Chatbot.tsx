@@ -52,17 +52,18 @@ function ChatMessageRow({ message }: { message: BaseChatMessage }) {
 
 const ChatModeOptions = [
   {
-    label: "Chat with page",
-    value: "with-page",
-  },
-  {
     label: "Chat with GPT",
     value: "with-llm",
   },
+  {
+    label: "Chat with page",
+    value: "with-page",
+  },
 ];
 
-export function Chatbot() {
+export default function Chatbot() {
   const { settings, setSettings } = useSettingsStore();
+
   const { openAIApiKey, chatMode = "with-llm" } = settings;
   const formRef = useRef<HTMLFormElement | null>(null);
   const outputPanelRef = useRef<HTMLDivElement | null>(null);
@@ -149,6 +150,14 @@ export function Chatbot() {
         {
           // verbose: true,
           returnSourceDocuments: true,
+          questionGeneratorChainOptions: {
+            // Using a different LLM instance for the rephrased question
+            // generation phase as we don't want that response to be streamed
+            llm: new ChatOpenAI({
+              openAIApiKey: openAIApiKey,
+              streaming: false,
+            }),
+          },
         }
       );
     }
@@ -214,7 +223,7 @@ export function Chatbot() {
         } else if (chain instanceof ConversationalRetrievalQAChain) {
           const response = await chain.call({
             question: userInput,
-            chat_history: history.map((message) => message.text),
+            chat_history: history,
             signal: abortControllerRef.current?.signal,
           });
 
@@ -376,5 +385,3 @@ export function Chatbot() {
     </>
   );
 }
-
-export default Chatbot;
