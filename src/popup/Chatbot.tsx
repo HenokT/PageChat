@@ -32,6 +32,8 @@ import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { VectorStore } from "langchain/vectorstores/base";
 import { ChatMode } from "../common/SettingsStoreProvider";
+import { StorageKeys } from "../utils/constants";
+import { useStoredState } from "../utils/useStoredState";
 
 function ChatMessageRow({ message }: { message: BaseChatMessage }) {
   return (
@@ -69,7 +71,11 @@ export default function Chatbot() {
   const outputPanelRef = useRef<HTMLDivElement | null>(null);
   const userInputRef = useRef<HTMLTextAreaElement | null>(null);
   const [, history, setHistory] = useChatHistory([], chatMode);
-  const [userInput, setUserInput] = useState("");
+  const [, userInput, setUserInput] = useStoredState<string>({
+    storageKey: StorageKeys.USER_INPUT,
+    defaultValue: "",
+    debounceSaveByMills: 1000,
+  });
   const [userInputAwaitingResponse, setUserInputAwaitingResponse] = useState<
     string | undefined
   >();
@@ -244,7 +250,7 @@ export default function Chatbot() {
         abortControllerRef.current = undefined;
       }
     },
-    [chain, history, setHistory, userInput]
+    [chain, history, setHistory, setUserInput, userInput]
   );
 
   const stopGenerating = useCallback(() => {

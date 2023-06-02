@@ -8,6 +8,7 @@ export function useStoredState<T extends Serializable | undefined>({
   storageArea = "session",
   scope = "page",
   defaultValue,
+  debounceSaveByMills = 0,
 }: {
   storageKey: string;
   storageArea?: "local" | "session";
@@ -16,6 +17,7 @@ export function useStoredState<T extends Serializable | undefined>({
    * values passed after the initial render are ignored.
    */
   defaultValue: T;
+  debounceSaveByMills?: number;
 }): [boolean, T, React.Dispatch<React.SetStateAction<T>>] {
   const [state, setState] = useState(defaultValue);
   const defaultValueRef = useRef(defaultValue);
@@ -53,7 +55,7 @@ export function useStoredState<T extends Serializable | undefined>({
         ]);
         if (ignore) return;
 
-        console.log(`loaded state with key ${absoluteStorageKey}:`, result);
+        // console.log(`Loaded state:`, result);
 
         setState(result[absoluteStorageKey] ?? defaultValueRef.current);
       } catch (error) {
@@ -69,17 +71,25 @@ export function useStoredState<T extends Serializable | undefined>({
   }, [absoluteStorageKey, storageArea]);
 
   useEffect(() => {
-    async function saveHistory() {
-      if (loading || !absoluteStorageKey) return;
+    if (loading || !absoluteStorageKey) return;
 
-      await chrome.storage[storageArea].set({
-        [absoluteStorageKey]: state,
-      });
+    const timeoutID = setTimeout(async function saveState() {
+      try {
+        await chrome.storage[storageArea].set({
+          [absoluteStorageKey]: state,
+        });
 
-      console.log(`saved state with key ${absoluteStorageKey}:`, state);
-    }
-    saveHistory();
-  }, [loading, absoluteStorageKey, state, storageArea]);
+        // console.log(`Saved state: `, {
+        //   [absoluteStorageKey]: state,
+        // });
+      } catch (error) {
+        console.error(error);
+      }
+    }, debounceSaveByMills);
+    return () => {
+      clearTimeout(timeoutID);
+    };
+  }, [loading, absoluteStorageKey, state, storageArea, debounceSaveByMills]);
 
   return [loading, state, setState];
 }
