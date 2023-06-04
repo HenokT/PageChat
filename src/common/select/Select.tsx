@@ -24,10 +24,10 @@ export const Select = ({
   ...rest
 }: SelectProps) => {
   return (
-    <div className={classNames(className)}>
-      {label && <label htmlFor={name}>{label}:</label>}
+    <div className={classNames(className, styles.selectContainer)}>
+      {label && <label htmlFor={name}>{label}</label>}
       <div>
-        <select {...rest} className={styles.select}>
+        <select {...rest}>
           {placeholder ? <option value="">{placeholder}</option> : null}
           {options.map((option, index) => (
             <option key={index} value={option.value}>

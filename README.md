@@ -2,6 +2,10 @@
 
 A Chrome extension that allows you to access ChatGPT from any webpage as well as ask questions about the page you are on or summarize it. 
 
+![Chat with page](docs/images/chat-with-page-480px.gif)
+
+![Page Summary](docs/images/page-summary-480px.gif)
+
 The extension is built with [React](https://react.dev/) and [Vite](https://vitejs.dev/). It also uses the Vite plugin [
 CRXJS](https://crxjs.dev/vite-plugin/) which parses the extension's entry file [manifest.json](manifest.json) and ensures that files referenced in it are compiled and bundled. 
 

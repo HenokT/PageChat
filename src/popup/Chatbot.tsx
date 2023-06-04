@@ -1,38 +1,38 @@
-import { ChatOpenAI } from "langchain/chat_models/openai";
-import {
-  HumanChatMessage,
-  AIChatMessage,
-  BaseChatMessage,
-} from "langchain/schema";
-import {
-  useRef,
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  FormEvent,
-} from "react";
-import { useChatHistory } from "../utils/useChatHistory";
-import ReactMarkdown from "react-markdown";
 import {
   ConversationChain,
   ConversationalRetrievalQAChain,
 } from "langchain/chains";
+import { ChatOpenAI } from "langchain/chat_models/openai";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { BufferMemory } from "langchain/memory";
 import {
   ChatPromptTemplate,
-  MessagesPlaceholder,
   HumanMessagePromptTemplate,
+  MessagesPlaceholder,
 } from "langchain/prompts";
-import { useSettingsStore } from "../utils/useSettingsStore";
-import { Select } from "../common/select/Select";
-import { getCurrentPageContent } from "../utils/getPageContent";
+import {
+  AIChatMessage,
+  BaseChatMessage,
+  HumanChatMessage,
+} from "langchain/schema";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { MemoryVectorStore } from "langchain/vectorstores/memory";
-import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { VectorStore } from "langchain/vectorstores/base";
+import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import ReactMarkdown from "react-markdown";
 import { ChatMode } from "../common/SettingsStoreProvider";
+import { Select } from "../common/select/Select";
 import { StorageKeys } from "../utils/constants";
+import { getCurrentPageContent } from "../utils/getPageContent";
+import { useChatHistory } from "../utils/useChatHistory";
+import { useSettingsStore } from "../utils/useSettingsStore";
 import { useStoredState } from "../utils/useStoredState";
 
 function ChatMessageRow({ message }: { message: BaseChatMessage }) {
